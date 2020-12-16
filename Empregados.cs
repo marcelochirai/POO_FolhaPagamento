@@ -1,35 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Globalization;
+using POO_FolhaPagamento.Entities;
 
-namespace POO_TarefaSalarioEncapsulamento
+namespace POO_FolhaPagamento.Entities
 {
     class Empregados
     {
-        public int Id { get; set; }
+        public int Horas { get; set; }
         public string Nome { get; set; }
         public double Salario { get; private set; }
 
-        public Empregados(int id, string nome, double salario)
+        public Empregados(string nome, int horas,  double salario)
         {
-            Id = id;
+            Horas = horas;
             Nome = nome;
             Salario = salario;
         }
 
-        public void AumentoSalario(double porcentagem)
+        public double SalarioMensal ()
         {
-            Salario += Salario * porcentagem / 100.0;
+            return Salario = Salario * Horas;
         }
 
         public override string ToString()
         {
-            return Id
-                + ", "
-                + Nome
-                + ", "
-                + Salario.ToString("F2", CultureInfo.InvariantCulture);
+            return Nome
+                + " - R$ " 
+                + SalarioMensal().ToString("F2", CultureInfo.InvariantCulture);
         }
     }
 }

@@ -1,6 +1,9 @@
 ﻿using System;
-using System.Globalization;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Globalization;
+using POO_FolhaPagamento.Entities;
 
 /*
  * CONTEÚDO DISPONÍVEL NA AULA DO DIA 16/11/20 (slides 24 e 25)
@@ -13,7 +16,7 @@ using System.Collections.Generic;
  * armazená-los em uma lista. Depois de ler todos os dados, 
  * mostrar nome e pagamento de cada funcionário na mesma ordem em que foram digitados.
  */
-namespace POO_TarefaSalarioEncapsulamento
+namespace POO_FolhaPagamento.Entities
 {
     class Program
     {
@@ -25,47 +28,56 @@ namespace POO_TarefaSalarioEncapsulamento
 
             //Criação da lista Empregados
             List<Empregados> list = new List<Empregados>();
-
-            //Criação do laço para inserção de dados conforme N
+            
+            Console.WriteLine();
+            //Criação do laço para inserção de dados conforme n
             for (int i = 1; i <= n; i++)
             {
-                Console.WriteLine("Funcionário #" + i + ":");   //Informa o número sequencial do funcionário
-                Console.Write("Id: ");                          //Solicita um número de identificação "ID"
-                int id = int.Parse(Console.ReadLine());
-                Console.Write("Nome: ");                        //Solicita o nome do funcionário
+                //Informa o número sequencial do funcionário
+                Console.WriteLine($"Funcionário #{i}:");
+
+                //Verificar se é terceirizado
+                Console.Write("Terceirizado (s/n)?");
+                string terceirizado = Console.ReadLine();
+
+                //Solicita o nome do funcionário
+                Console.Write("Nome: ");
                 string nome = Console.ReadLine();
-                Console.Write("Salário: ");                     //Solicita o valor do salario inicial do funcionário
+
+                //Solicita a quantidade de horas trabalhadas no mês
+                Console.Write("Horas trabalhadas: ");
+                int horas = int.Parse(Console.ReadLine());
+
+                //Solicita o valor do salario/hora do funcionário
+                Console.Write("Salário por hora: ");
                 double salario = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
-                
-                //Adição das informações na lista
-                list.Add(new Empregados(id, nome, salario));
+
+                //Verificação de Terceirizado
+                if (terceirizado == "s")
+                {
+                    //funcionários terceirizados ainda recebem um bônus
+                    //correspondente a 110% de sua despesa adicional
+                    Console.Write("Adicional: ");
+                    double adicional = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
+                    list.Add(new Terceirizados(nome, horas, adicional, salario));
+                    //Empregados terceirizados = new Terceirizados();
+                }
+                else
+                {
+                    list.Add(new Empregados(nome, horas, salario));
+                    //Empregados efetivos = new Empregados();
+                }
+
                 Console.WriteLine();
+
             }
+            Console.WriteLine("Pagamentos:");
 
-            Console.Write("ID do funcionário que receberá o aumento: ");    //Solicita o ID. 
-            int searchId = int.Parse(Console.ReadLine());                   //A variável searchId receberá o valor da ID informada.
-
-            //A variável emp receberá um valor da lista, caso seja encontrado o ID informado.
-            Empregados emp = list.Find(x => x.Id == searchId);
-            if (emp != null)    //Se a variável emp não for nula...
+            foreach (Empregados empregados in list)
             {
-                Console.Write("Porcentagem de aumento do salário: ");   //Solicita o valor percentual a ser adicionado.
-                double porcentagem = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
-                emp.AumentoSalario(porcentagem);
+                Console.WriteLine(empregados);
             }
-            else  //Se o ID não existir...
-            {
-                Console.WriteLine("Este funcionário não existe!");
-            }
-
             Console.WriteLine();
-            Console.WriteLine("Lista atualizada dos funcionários da Bravo:");
-
-            //Laço que cria uma lista de funcionários e seus salários.
-            foreach (Empregados obj in list)
-            {
-                Console.WriteLine(obj);
-            }
         }
     }
 }
